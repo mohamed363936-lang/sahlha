@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172554">
+  <meta name="description" content="سهّلها: مهامك وملاحظاتك ومصاريفك وقوائمك في مكان واحد.">
+  <title>سهّلها | Sahlha</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">س</div>
+        <div><strong data-i18n="appName">سهّلها</strong><small data-i18n="tagline">مساحة يومك المنظّمة</small></div>
+      </div>
+      <nav id="mainNav" aria-label="Main navigation">
+        <button class="nav-item active" data-page="home"><span>⌂</span><b data-i18n="navHome">الرئيسية</b></button>
+        <button class="nav-item" data-page="tasks"><span>✓</span><b data-i18n="navTasks">المهام</b></button>
+        <button class="nav-item" data-page="notes"><span>▤</span><b data-i18n="navNotes">الملاحظات</b></button>
+        <button class="nav-item" data-page="budget"><span>◈</span><b data-i18n="navBudget">الميزانية</b></button>
+        <button class="nav-item" data-page="shopping"><span>☷</span><b data-i18n="navShopping">المشتريات</b></button>
+        <button class="nav-item" data-page="calculator"><span>＋</span><b data-i18n="navCalculator">الحاسبة</b></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="privacy-note"><span>🔒</span><div><b data-i18n="privateTitle">بياناتك محلية</b><small data-i18n="privateText">تُحفظ على هذا الجهاز فقط.</small></div></div>
+        <button id="exportBtn" class="button button-ghost full-width">⇩ <span data-i18n="exportData">تصدير بياناتي</span></button>
+        <label class="import-label button button-ghost full-width">⇧ <span data-i18n="importData">استيراد نسخة</span><input id="importInput" type="file" accept="application/json" hidden></label>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow" data-i18n="dailySpace">مساحتك اليومية</p>
+          <h1 id="pageTitle" data-i18n="navHome">الرئيسية</h1>
+        </div>
+        <div class="top-actions">
+          <select id="languageSelect" aria-label="Language">
+            <option value="ar">العربية</option><option value="en">English</option><option value="fr">Français</option>
+          </select>
+          <button id="installBtn" class="button button-primary hidden" data-i18n="installApp">تثبيت التطبيق</button>
+        </div>
+      </header>
+
+      <section id="page-home" class="page active">
+        <div class="welcome-card">
+          <div class="welcome-copy">
+            <span class="pill" data-i18n="welcomePill">خطوة صغيرة، يوم أفضل</span>
+            <h2 data-i18n="welcomeTitle">خلّ يومك أسهل.</h2>
+            <p data-i18n="welcomeText">رتّب مهامك، دوّن أفكارك، وتابع مصاريفك من مكان واحد.</p>
+            <button class="button button-light" data-goto="tasks" data-i18n="startOrganizing">ابدأ التنظيم ←</button>
+          </div>
+          <div class="welcome-art" aria-hidden="true"><div class="orb orb-one"></div><div class="orb orb-two"></div><div class="art-card">✓<span>✦</span></div></div>
+        </div>
+        <div class="section-heading"><div><h2 data-i18n="overview">نظرة عامة</h2><p data-i18n="overviewSub">ملخص سريع ليومك</p></div><span id="todayLabel" class="date-label"></span></div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon purple">✓</div><div><p data-i18n="openTasks">مهام غير مكتملة</p><strong id="statTasks">0</strong></div></article>
+          <article class="stat-card"><div class="stat-icon green">▤</div><div><p data-i18n="savedNotes">ملاحظات محفوظة</p><strong id="statNotes">0</strong></div></article>
+          <article class="stat-card"><div class="stat-icon orange">◈</div><div><p data-i18n="thisMonthSpend">مصروفات الشهر</p><strong id="statSpend">0.00</strong></div></article>
+          <article class="stat-card"><div class="stat-icon blue">☷</div><div><p data-i18n="shoppingLeft">أشياء في قائمة المشتريات</p><strong id="statShopping">0</strong></div></article>
+        </div>
+        <div class="home-columns">
+          <article class="panel">
+            <div class="panel-heading"><div><h3 data-i18n="nextTasks">المهام القادمة</h3><p data-i18n="smallSteps">إنجازات صغيرة تصنع فرقًا</p></div><button class="text-button" data-goto="tasks" data-i18n="viewAll">عرض الكل</button></div>
+            <div id="homeTasks" class="compact-list empty-state"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><h3 data-i18n="quickActions">إجراءات سريعة</h3><p data-i18n="saveTime">وفّر وقتك بخطوة واحدة</p></div></div>
+            <div class="quick-grid">
+              <button class="quick-action" data-goto="tasks"><span class="quick-icon purple">＋</span><b data-i18n="addTask">إضافة مهمة</b><small data-i18n="addTaskHint">لا تنسَ ما يهمك</small></button>
+              <button class="quick-action" data-goto="notes"><span class="quick-icon green">✎</span><b data-i18n="addNote">كتابة ملاحظة</b><small data-i18n="addNoteHint">احفظ فكرتك بسرعة</small></button>
+              <button class="quick-action" data-goto="budget"><span class="quick-icon orange">◈</span><b data-i18n="addExpense">تسجيل مصروف</b><small data-i18n="addExpenseHint">تابع أين تذهب أموالك</small></button>
+              <button class="quick-action" data-goto="shopping"><span class="quick-icon blue">☷</span><b data-i18n="shoppingList">قائمة المشتريات</b><small data-i18n="shoppingHint">تذكّر ما تحتاجه</small></button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="page-tasks" class="page">
+        <div class="section-heading"><div><h2 data-i18n="tasksTitle">المهام</h2><p data-i18n="tasksSub">خطّط لخطوتك التالية</p></div></div>
+        <form id="taskForm" class="panel form-panel">
+          <div class="form-grid task-form-grid">
+            <label><span data-i18n="taskName">اسم المهمة</span><input id="taskTitle" required maxlength="120" placeholder="مثال: مراجعة الدرس"></label>
+            <label><span data-i18n="dueDate">تاريخ الاستحقاق (اختياري)</span><input id="taskDue" type="date"></label>
+            <button class="button button-primary" type="submit">＋ <span data-i18n="addTask">إضافة مهمة</span></button>
+          </div>
+        </form>
+        <div class="filter-row"><div id="taskFilters" class="segmented"><button class="selected" data-filter="all" data-i18n="filterAll">الكل</button><button data-filter="open" data-i18n="filterOpen">غير مكتملة</button><button data-filter="done" data-i18n="filterDone">مكتملة</button></div><span id="taskCount" class="muted"></span></div>
+        <div id="tasksList" class="item-list"></div>
+      </section>
+
+      <section id="page-notes" class="page">
+        <div class="section-heading"><div><h2 data-i18n="notesTitle">الملاحظات</h2><p data-i18n="notesSub">أفكارك تستحق مكانًا آمنًا</p></div></div>
+        <form id="noteForm" class="panel form-panel">
+          <div class="form-grid">
+            <label><span data-i18n="noteTitle">عنوان الملاحظة</span><input id="noteTitle" maxlength="100" required></label>
+            <label class="span-two"><span data-i18n="noteBody">المحتوى</span><textarea id="noteBody" rows="3" required></textarea></label>
+            <button class="button button-primary" type="submit">＋ <span data-i18n="saveNote">حفظ الملاحظة</span></button>
+          </div>
+        </form>
+        <div id="notesList" class="notes-grid"></div>
+      </section>
+
+      <section id="page-budget" class="page">
+        <div class="section-heading"><div><h2 data-i18n="budgetTitle">الميزانية والمصاريف</h2><p data-i18n="budgetSub">صورة أوضح لأموالك</p></div></div>
+        <div class="budget-summary">
+          <article class="budget-card"><p data-i18n="monthlyBudget">الميزانية الشهرية</p><strong id="budgetLimitDisplay">0.00</strong><small data-i18n="setYourLimit">حدد حدّك الشهري</small></article>
+          <article class="budget-card"><p data-i18n="spentSoFar">المصروف حتى الآن</p><strong id="budgetSpentDisplay">0.00</strong><small data-i18n="thisMonth">هذا الشهر</small></article>
+          <article class="budget-card"><p data-i18n="remaining">المتبقي</p><strong id="budgetRemainingDisplay">0.00</strong><small data-i18n="afterExpenses">بعد خصم المصروفات</small></article>
+        </div>
+        <form id="budgetLimitForm" class="panel form-panel">
+          <div class="form-grid two-col">
+            <label><span data-i18n="monthlyBudgetAmount">قيمة الميزانية الشهرية</span><input id="budgetLimit" type="number" min="0" step="0.01" required></label>
+            <label><span data-i18n="currency">العملة</span><select id="currency"><option value="MAD">MAD — درهم مغربي</option><option value="EUR">EUR — يورو</option><option value="USD">USD — دولار</option><option value="GBP">GBP — جنيه إسترليني</option></select></label>
+            <button class="button button-primary" type="submit" data-i18n="saveBudget">حفظ الميزانية</button>
+          </div>
+        </form>
+        <form id="expenseForm" class="panel form-panel">
+          <h3 data-i18n="newExpense">مصروف جديد</h3>
+          <div class="form-grid">
+            <label><span data-i18n="expenseName">اسم المصروف</span><input id="expenseName" required maxlength="100"></label>
+            <label><span data-i18n="amount">المبلغ</span><input id="expenseAmount" type="number" min="0.01" step="0.01" required></label>
+            <label><span data-i18n="expenseDate">التاريخ</span><input id="expenseDate" type="date" required></label>
+            <button class="button button-primary" type="submit">＋ <span data-i18n="addExpense">تسجيل مصروف</span></button>
+          </div>
+        </form>
+        <div class="panel"><div class="panel-heading"><h3 data-i18n="expenseHistory">سجل المصروفات</h3><button id="clearExpenses" class="text-button danger-text" data-i18n="clearHistory">مسح السجل</button></div><div id="expensesList" class="item-list"></div></div>
+      </section>
+
+      <section id="page-shopping" class="page">
+        <div class="section-heading"><div><h2 data-i18n="shoppingTitle">قائمة المشتريات</h2><p data-i18n="shoppingSub">كل ما تحتاجه في مكان واحد</p></div></div>
+        <form id="shoppingForm" class="panel form-panel">
+          <div class="form-grid shopping-form-grid">
+            <label><span data-i18n="itemName">اسم الغرض</span><input id="shoppingName" required maxlength="100"></label>
+            <label><span data-i18n="quantity">الكمية (اختياري)</span><input id="shoppingQty" maxlength="40"></label>
+            <button class="button button-primary" type="submit">＋ <span data-i18n="addItem">إضافة غرض</span></button>
+          </div>
+        </form>
+        <div class="filter-row"><span id="shoppingProgress" class="muted"></span><button id="clearChecked" class="text-button" data-i18n="removeChecked">حذف العناصر المحددة</button></div>
+        <div id="shoppingList" class="item-list"></div>
+      </section>
+
+      <section id="page-calculator" class="page">
+        <div class="section-heading"><div><h2 data-i18n="calculatorTitle">الحاسبة</h2><p data-i18n="calculatorSub">حساب سريع وبسيط</p></div></div>
+        <div class="calculator panel">
+          <label class="calc-label" for="calcDisplay" data-i18n="calculation">عملية حسابية</label>
+          <input id="calcDisplay" class="calc-display" inputmode="decimal" value="0" aria-label="Calculator display">
+          <div class="calc-keys">
+            <button data-calc="clear" class="calc-clear">C</button><button data-calc="back">⌫</button><button data-calc="(">(</button><button data-calc=")">)</button>
+            <button data-calc="7">7</button><button data-calc="8">8</button><button data-calc="9">9</button><button data-calc="/">÷</button>
+            <button data-calc="4">4</button><button data-calc="5">5</button><button data-calc="6">6</button><button data-calc="*">×</button>
+            <button data-calc="1">1</button><button data-calc="2">2</button><button data-calc="3">3</button><button data-calc="-">−</button>
+            <button data-calc="0">0</button><button data-calc=".">.</button><button data-calc="=" class="calc-equals">=</button><button data-calc="+">+</button>
+          </div>
+          <p class="muted calc-hint" data-i18n="calcHint">تُقبل العمليات الحسابية الأساسية فقط.</p>
+        </div>
+      </section>
+
+      <footer class="footer"><span data-i18n="footerText">سهّلها — أدواتك اليومية، ببساطة.</span><span data-i18n="localOnly">نسختك الأولية • البيانات محفوظة على جهازك</span></footer>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

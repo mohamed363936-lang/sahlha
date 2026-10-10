@@ -1,0 +1,15 @@
+{
+  "id": "./",
+  "name": "سهّلها | Sahlha",
+  "short_name": "سهّلها",
+  "description": "مهامك وملاحظاتك ومصاريفك وقوائمك في مكان واحد.",
+  "lang": "ar",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#172554",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
